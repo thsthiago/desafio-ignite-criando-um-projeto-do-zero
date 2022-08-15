@@ -33,13 +33,7 @@ interface HomeProps {
 const formatData = (posts): Post[] => {
   return posts.map(post => ({
     uid: post.uid,
-    first_publication_date: format(
-      new Date(post.first_publication_date),
-      'dd MMM yyyy',
-      {
-        locale: ptBR,
-      }
-    ),
+    first_publication_date: post.first_publication_date,
     data: {
       title: post.data.title,
       subtitle: post.data.subtitle,
@@ -69,38 +63,46 @@ export default function Home({ postsPagination }: HomeProps) {
         <title>Posts | Spacetraveling</title>
       </Head>
 
-      <main className={styles.container}>
+      <main className={commonStyles.commonContainer}>
         <div className={styles.posts}>
           {results.map(post => (
-            <Link href={`/post/${post.uid}`} passHref>
-              <a>
+            <Link key={post.uid} href={`/post/${post.uid}`} passHref>
+              <a className={commonStyles.commonMaxContainerArticle}>
                 <strong>{post.data.title}</strong>
                 <p>{post.data.subtitle}</p>
                 <div>
                   <p>
-                    <FiCalendar />
-                    <time>{post.first_publication_date}</time>
+                    <FiCalendar size={20} />
+                    <time>
+                      {format(
+                        new Date(post.first_publication_date),
+                        'dd MMM yyyy',
+                        {
+                          locale: ptBR,
+                        }
+                      )}
+                    </time>
                   </p>
 
                   <p>
-                    <FiUser />
+                    <FiUser size={20} />
                     <span>{post.data.author}</span>
                   </p>
                 </div>
               </a>
             </Link>
           ))}
-        </div>
 
-        {next_page && (
-          <button
-            type="button"
-            className={styles.btnNextPosts}
-            onClick={handleNextPage}
-          >
-            Carregar mais posts
-          </button>
-        )}
+          {next_page && (
+            <button
+              type="button"
+              className={styles.btnNextPosts}
+              onClick={handleNextPage}
+            >
+              Carregar mais posts
+            </button>
+          )}
+        </div>
       </main>
     </>
   );
